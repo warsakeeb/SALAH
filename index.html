@@ -3,117 +3,158 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#10b981"> <title>WAR SAKEEB Tracker</title>
+  <meta name="theme-color" content="#10b981">
+  <title>WAR SAKEEB Tracker</title>
   <link rel="manifest" href="manifest.json">
   <style>
-    /* === GREEN PREMIUM BENTO GRID === */
+    /* === RESTORED PREMIUM 3D GREEN THEME === */
     :root {
       --text-dark: #064e3b;
       --text-muted: #64748b;
       --active-bg: #ecfdf5; 
       --active-text: #059669; 
-      --spring: cubic-bezier(0.175, 0.885, 0.32, 1.25);
+      --spring-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.25);
+      --spring-smooth: cubic-bezier(0.23, 1, 0.32, 1);
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
 
     body {
-      background: #f8fafc;
+      background: linear-gradient(-45deg, #f0fdf4, #dcfce7, #f8fafc, #ecfdf5);
+      background-size: 300% 300%;
+      animation: ambientBG 12s ease-in-out infinite;
       color: var(--text-dark);
       min-height: 100vh;
-      display: flex; justify-content: center; align-items: center;
-      padding: 1rem;
+      display: flex; justify-content: center; align-items: center; 
+      overflow-x: hidden;
+      perspective: 1500px; 
     }
 
     .app-container {
-      width: 100%; max-width: 400px;
-      display: flex; flex-direction: column; gap: 1rem;
+      width: 100%; max-width: 440px; padding: 1.5rem;
+      display: flex; flex-direction: column; gap: 1.2rem;
+      animation: containerSwoop 1.2s var(--spring-elastic) both;
+      transform-style: preserve-3d;
+      margin: auto;
     }
 
-    header { text-align: center; margin-bottom: 0.5rem; }
-    h1 { font-size: 1.5rem; letter-spacing: 2px; color: #065f46; }
-    #date-text { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+    header { display: flex; flex-direction: column; align-items: center; justify-content: center; animation: dropBounce 1s var(--spring-elastic) 0.2s both; }
+    h1 { font-size: 1.8rem; font-weight: 900; letter-spacing: 4px; color: var(--text-dark); text-transform: uppercase; margin-bottom: 0.2rem; position: relative; overflow: hidden; }
+    h1::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent); transform: skewX(-20deg); animation: metallicShine 3s infinite; }
+    
+    #date-text { color: var(--text-muted); font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+    #location-text { font-size: 0.8rem; font-weight: 800; letter-spacing: 1px; color: var(--active-text); }
 
     .dashboard-panel {
-      background: #ffffff; border-radius: 30px; 
-      box-shadow: 0 20px 40px rgba(0,0,0,0.05);
-      padding: 2rem 1.5rem; position: relative;
+      position: relative; background: #ffffff; border-radius: 40px; 
+      box-shadow: 0 30px 60px -15px rgba(6, 78, 59, 0.15), 0 0 0 1px rgba(255,255,255,0.5);
+      overflow: hidden; animation: float3D 6s ease-in-out infinite alternate;
+      will-change: transform; transform-style: preserve-3d;
     }
 
-    #current-time { font-size: 3.2rem; font-weight: 800; text-align: center; margin-bottom: 1rem; color: #1e293b; }
-    .ampm { font-size: 1rem; color: #94a3b8; }
-
-    .countdown-pill {
-      background: #f1f5f9; padding: 0.6rem 1rem; border-radius: 100px;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      font-size: 0.9rem; font-weight: 700; margin: 0 auto 2rem; width: fit-content;
+    .audio-toggle {
+      position: absolute; top: 1.2rem; right: 1.2rem;
+      width: 42px; height: 42px; border-radius: 50%; background: #f1f5f9; border: none; outline: none;
+      font-size: 1.2rem; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: all 0.3s var(--spring-elastic);
+      z-index: 20; opacity: 0; animation: popUp 0.6s var(--spring-elastic) 0.8s both;
     }
-    .dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; animation: pulse 1.5s infinite; }
+    .audio-toggle.on { background: var(--active-bg); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2); }
 
-    .prayer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
-    .prayer-card {
-      background: #f8fafc; padding: 1.2rem; border-radius: 20px;
-      display: flex; flex-direction: column; gap: 4px; transition: 0.3s;
+    .hero-time-section { padding: 2.5rem 1.5rem 2rem; text-align: center; }
+    #current-time { font-size: 3.5rem; font-weight: 800; letter-spacing: -2px; color: #1e293b; line-height: 1; margin-bottom: 1.5rem; animation: scalePop 0.8s var(--spring-elastic) 0.6s both; }
+    .ampm-text { font-size: 1.1rem; font-weight: 800; color: var(--text-muted); margin-left: 4px; }
+
+    .countdown-pill { display: inline-flex; align-items: center; gap: 8px; background: #f1f5f9; padding: 0.75rem 1.5rem; border-radius: 100px; font-size: 0.95rem; font-weight: 700; color: var(--text-dark); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+    .countdown-dot { width: 10px; height: 10px; background: #10b981; border-radius: 50%; animation: heartbeat 1.5s infinite; }
+
+    .prayer-list-wrapper { background: #f8fafc; padding: 1.5rem; perspective: 1000px; }
+    .prayer-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; transform-style: preserve-3d; }
+
+    .prayer-item {
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 10px;
+      padding: 1.1rem; background: #ffffff; border-radius: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      transition: transform 0.15s var(--spring-smooth); transform-origin: top center; cursor: pointer;
     }
-    .prayer-card.active { background: var(--active-bg); border: 1px solid #10b981; }
-    .p-name { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); }
-    .p-time { font-size: 1.1rem; font-weight: 800; }
-    .prayer-card.active .p-name { color: var(--active-text); }
 
-    .tahajjud-card { grid-column: span 2; flex-direction: row; justify-content: space-between; align-items: center; }
+    .prayer-top-row { display: flex; align-items: flex-start; justify-content: space-between; width: 100%; gap: 6px; }
+    .prayer-name { font-weight: 800; font-size: 0.95rem; color: var(--text-muted); }
+    .prayer-time { font-weight: 800; font-size: 1.25rem; color: var(--text-dark); }
 
-    .audio-btn {
-      position: absolute; top: 1rem; right: 1rem;
-      border: none; background: #f1f5f9; width: 40px; height: 40px;
-      border-radius: 50%; cursor: pointer; font-size: 1.2rem;
-    }
-    .audio-btn.on { background: #d1fae5; color: #059669; }
+    .event-badge { font-size: 0.6rem; font-weight: 800; text-transform: uppercase; padding: 3px 6px; border-radius: 6px; white-space: nowrap; }
+    .badge-sehri { background: #dcfce7; color: #166534; }
+    .badge-iftar { background: #fef3c7; color: #92400e; }
 
-    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+    .prayer-item[data-name="Tahajjud"] { grid-column: span 2; flex-direction: row; justify-content: space-between; align-items: center; }
+
+    .prayer-item.active { background: var(--active-bg); border: 1px solid rgba(16, 185, 129, 0.2); transform: scale(1); z-index: 10; }
+    .prayer-item.active::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transform: skewX(-20deg); animation: metallicShine 3s infinite; }
+    .prayer-item.active .prayer-name, .prayer-item.active .prayer-time { color: var(--active-text); }
+
+    @keyframes containerSwoop { 0% { opacity: 0; transform: translateZ(-500px) translateY(100px); } 100% { opacity: 1; transform: translateZ(0) translateY(0); } }
+    @keyframes dropBounce { 0% { opacity: 0; transform: translateY(-50px); } 100% { opacity: 1; transform: translateY(0); } }
+    @keyframes float3D { 0% { transform: translateY(0) rotateX(0deg); } 100% { transform: translateY(-8px) rotateX(2deg); } }
+    @keyframes ambientBG { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    @keyframes heartbeat { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
+    @keyframes metallicShine { 0% { left: -100%; } 100% { left: 200%; } }
+    @keyframes swingDown { 0% { opacity: 0; transform: rotateX(-90deg); } 100% { opacity: 1; transform: rotateX(0deg); } }
   </style>
 </head>
 <body>
 
   <div class="app-container">
     <header>
-      <h1 id="date-text">...</h1>
+      <p id="date-text">...</p>
       <h1>WAR SAKEEB</h1>
+      <p id="location-text">📍 Syncing Location...</p>
     </header>
     
     <main class="dashboard-panel">
-      <button id="audio-btn" class="audio-btn">🔇</button>
-      <div id="current-time">00:00 <span class="ampm">AM</span></div>
-      
-      <div class="countdown-pill">
-        <div class="dot"></div>
-        <span id="countdown">Calculating...</span>
+      <button id="audio-btn" class="audio-toggle">🔇</button>
+      <div class="hero-time-section">
+        <div id="current-time">00:00:00</div>
+        <div class="countdown-pill">
+          <div class="countdown-dot"></div>
+          <span id="countdown-text">Calculating...</span>
+        </div>
       </div>
-
-      <div class="prayer-grid" id="grid"></div>
+      <div class="prayer-list-wrapper">
+        <div class="prayer-list" id="grid"></div>
+      </div>
     </main>
   </div>
 
   <script>
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
 
-    // === ADHAN.MP3 FIX ===
+    // FIXED FILENAME: Capital 'A' to match your GitHub
     const adhan = new Audio('Adhan.mp3'); 
     let audioOn = false;
     let lastPlayed = "";
 
-    document.getElementById('audio-btn').onclick = (e) => {
+    const audioBtn = document.getElementById('audio-btn');
+    audioBtn.onclick = () => {
       audioOn = !audioOn;
-      e.target.innerHTML = audioOn ? "🔊" : "🔇";
-      e.target.classList.toggle('on');
-      if(audioOn) adhan.play().then(() => adhan.pause()); // Unlock audio
+      audioBtn.innerHTML = audioOn ? "🔊" : "🔇";
+      audioBtn.classList.toggle('on');
+      if(audioOn) adhan.play().then(() => adhan.pause()).catch(e => {});
     };
 
-    function update() {
+    function convertTo12Hour(date) {
+      let h = date.getHours();
+      let m = String(date.getMinutes()).padStart(2, '0');
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      h = h % 12 || 12;
+      return `${h}:${m} <span class="ampm-text">${ampm}</span>`;
+    }
+
+    function runEngine() {
       const now = new Date();
-      document.getElementById('current-time').innerHTML = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}).replace(/ /g, ' <span class="ampm">') + '</span>';
-      document.getElementById('date-text').innerText = now.toLocaleDateString('en-US', {weekday: 'long', month: 'short', day: 'numeric'});
+      document.getElementById('current-time').innerHTML = now.toLocaleTimeString('en-US', { hour12: true, hour: 'numeric', minute: '2-digit', second: '2-digit' }).replace(' ', '<span class="ampm-text">') + '</span>';
+      document.getElementById('date-text').innerText = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
       
-      const timings = JSON.parse(localStorage.getItem('timings'));
+      const timings = JSON.parse(localStorage.getItem('prayer_times'));
       if (timings) {
         const pList = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
         let next = null;
@@ -121,54 +162,74 @@
         pList.forEach(name => {
           const [h, m] = timings[name].split(':');
           const pDate = new Date(); pDate.setHours(h, m, 0);
-          
-          if (!next && pDate > now) {
-            next = { name, time: pDate };
-            // Auto Play Adhan
-            if (audioOn && Math.abs(pDate - now) < 2000 && lastPlayed !== name && name !== "Sunrise") {
-              adhan.currentTime = 0; adhan.play(); lastPlayed = name;
-            }
-          }
+          if (!next && pDate > now) next = { name, date: pDate };
         });
 
         if (next) {
-          const diff = next.time - now;
-          const hh = Math.floor(diff / 3600000);
-          const mm = Math.floor((diff % 3600000) / 60000);
-          const ss = Math.floor((diff % 60000) / 1000);
-          document.getElementById('countdown').innerHTML = `Next: ${next.name} in ${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
+          const diff = next.date - now;
+          const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
+          const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+          const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+          document.getElementById('countdown-text').innerHTML = `Next: <strong>${next.name}</strong> in ${h}:${m}:${s}`;
+          
+          if (audioOn && diff < 1000 && lastPlayed !== next.name && !['Sunrise', 'Tahajjud'].includes(next.name)) {
+            adhan.currentTime = 0; adhan.play(); lastPlayed = next.name;
+          }
         }
       }
-      requestAnimationFrame(update);
+      requestAnimationFrame(runEngine);
     }
 
-    async function getData() {
+    async function init() {
       navigator.geolocation.getCurrentPosition(async pos => {
         const res = await fetch(`https://api.aladhan.com/v1/timings/${Math.floor(Date.now()/1000)}?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&method=2`);
-        const json = await res.json();
-        localStorage.setItem('timings', JSON.stringify(json.data.timings));
-        render(json.data.timings);
+        const data = await res.json();
+        localStorage.setItem('prayer_times', JSON.stringify(data.data.timings));
+        document.getElementById('location-text').innerText = "📍 Live Synced";
+        render(data.data.timings);
+      }, () => {
+        const cached = localStorage.getItem('prayer_times');
+        if(cached) render(JSON.parse(cached));
+        document.getElementById('location-text').innerText = "📍 Offline Mode";
       });
     }
 
     function render(t) {
-      const names = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
+      const names = [
+        {id: "Fajr", badge: "Sehri Ends"}, 
+        {id: "Sunrise"}, 
+        {id: "Dhuhr"}, 
+        {id: "Asr"}, 
+        {id: "Maghrib", badge: "Iftar"}, 
+        {id: "Isha"}, 
+        {id: "Tahajjud"}
+      ];
       const grid = document.getElementById('grid');
-      grid.innerHTML = names.map(n => `
-        <div class="prayer-card">
-          <span class="p-name">${n}</span>
-          <span class="p-time">${t[n]}</span>
-        </div>
-      `).join('') + `
-        <div class="prayer-card tahajjud-card">
-          <span class="p-name">✨ Tahajjud</span>
-          <span class="p-time">02:30 AM</span>
-        </div>
-      `;
+      const now = new Date();
+      let nextFound = false;
+
+      grid.innerHTML = names.map((p, i) => {
+        const [h, m] = (t[p.id] || "02:30").split(':');
+        const pDate = new Date(); pDate.setHours(h, m, 0);
+        let activeClass = "";
+        if(!nextFound && pDate > now) { activeClass = "active"; nextFound = true; }
+        
+        const badgeHTML = p.badge ? `<span class="event-badge ${p.id==='Fajr'?'badge-sehri':'badge-iftar'}">${p.badge}</span>` : "";
+        const delay = 0.5 + (i * 0.1);
+
+        return `
+          <div class="prayer-item ${activeClass}" data-name="${p.id}" style="animation: swingDown 0.8s var(--spring-elastic) ${delay}s both;">
+            <div class="prayer-top-row">
+              <span class="prayer-name">${p.id}</span>
+              ${badgeHTML}
+            </div>
+            <span class="prayer-time">${t[p.id] || "02:30"}</span>
+          </div>
+        `;
+      }).join('');
     }
 
-    getData();
-    update();
+    init(); runEngine();
   </script>
 </body>
 </html>
