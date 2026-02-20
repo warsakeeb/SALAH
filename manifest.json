@@ -1,8 +1,7 @@
 {
   "name": "WAR SAKEEB Tracker",
   "short_name": "WAR SAKEEB",
-  "description": "Premium 3D Prayer Tracker",
-  "start_url": "./index.html",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#f1f5f9",
