@@ -1,22 +1,23 @@
 {
   "name": "WAR SAKEEB Tracker",
   "short_name": "WAR SAKEEB",
+  "description": "Premium 3D Prayer Tracker",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#f1f5f9",
   "icons": [
     {
-      "src": "icon.png",
-      "sizes": "1024x1024",
+      "src": "https://via.placeholder.com/192.png?text=WS",
+      "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "icon.png",
-      "sizes": "1024x1024",
+      "src": "https://via.placeholder.com/512.png?text=WS",
+      "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }
