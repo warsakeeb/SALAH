@@ -8,7 +8,7 @@
   "theme_color": "#f1f5f9",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/713/713302.png",
+      "src": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/512x512/1f319.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
