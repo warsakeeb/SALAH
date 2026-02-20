@@ -1,7 +1,7 @@
 {
-  "name": "WAR SAKEEB Tracker",
+  "name": "WAR SAKEEB",
   "short_name": "WAR SAKEEB",
-  "start_url": "./index.html",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#f1f5f9",
@@ -9,8 +9,12 @@
     {
       "src": "icon.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
     }
   ]
 }
