@@ -7,13 +7,14 @@
   <title>WAR SAKEEB Tracker</title>
   <link rel="manifest" href="manifest.json">
   <style>
-    /* === ELITE MINIMALIST 4K THEME === */
+    /* === ELITE 4K MOTION GRAPHICS THEME === */
     :root {
-      --primary: #10b981;
-      --primary-dark: #065f46;
-      --glass: rgba(255, 255, 255, 0.92);
+      --em-dark: #064e3b;
+      --em-mid: #10b981;
+      --em-soft: #f0fdf4;
       --text: #0f172a;
       --muted: #64748b;
+      --spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -22,69 +23,72 @@
       background: #f8fafc;
       background: linear-gradient(-45deg, #ecfdf5, #f0fdf4, #f8fafc, #dcfce7);
       background-size: 400% 400%;
-      animation: meshGradient 15s ease infinite;
+      animation: meshFlow 15s ease infinite;
       min-height: 100vh;
       display: flex; justify-content: center; align-items: center;
-      color: var(--text);
+      perspective: 1500px;
+      overflow: hidden;
     }
 
-    .app-wrap {
+    .app-container {
       width: 100%; max-width: 420px; padding: 1.2rem;
       display: flex; flex-direction: column; gap: 1.2rem;
-      animation: slideUp 0.8s cubic-bezier(0.2, 1, 0.3, 1) both;
+      animation: swoopIn 1s var(--spring) both;
+      transform-style: preserve-3d;
     }
 
-    header { text-align: center; }
-    h1 { font-size: 1.8rem; font-weight: 900; letter-spacing: 5px; color: var(--primary-dark); text-transform: uppercase; }
-    #date { color: var(--muted); font-size: 0.8rem; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+    header { text-align: center; transform: translateZ(20px); }
+    h1 { font-size: 1.8rem; font-weight: 900; letter-spacing: 5px; color: var(--em-dark); text-transform: uppercase; }
+    #date-text { color: var(--muted); font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; }
 
-    .main-panel {
-      position: relative; background: var(--glass); border-radius: 40px;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 25px 50px -12px rgba(6, 78, 59, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.6);
-      padding-bottom: 1.5rem;
+    .dashboard {
+      position: relative; background: rgba(255, 255, 255, 0.95); border-radius: 40px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 25px 60px -15px rgba(6, 78, 59, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      padding-bottom: 2rem;
+      animation: float 6s ease-in-out infinite alternate;
+      transform-style: preserve-3d;
     }
 
     .audio-btn {
       position: absolute; top: 1.5rem; right: 1.5rem;
       width: 44px; height: 44px; border-radius: 50%; border: none;
-      background: #f1f5f9; cursor: pointer; font-size: 1.1rem;
+      background: #f1f5f9; cursor: pointer; font-size: 1.2rem;
       display: flex; align-items: center; justify-content: center;
-      transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: 0.3s var(--spring);
     }
-    .audio-btn.active { background: #d1fae5; color: #059669; transform: scale(1.1); }
+    .audio-btn.on { background: var(--em-soft); color: var(--em-mid); transform: scale(1.1); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2); }
 
-    .hero { padding: 3rem 1.5rem 1.8rem; text-align: center; }
-    #time { font-size: 4rem; font-weight: 900; color: #1e293b; line-height: 1; margin-bottom: 1rem; letter-spacing: -3px; }
+    .hero-timer { padding: 3rem 1.5rem 1.8rem; text-align: center; }
+    #time-display { font-size: 4rem; font-weight: 900; color: #1e293b; line-height: 1; margin-bottom: 1.2rem; letter-spacing: -3px; }
     .ampm { font-size: 1.2rem; color: var(--muted); margin-left: 5px; font-weight: 700; }
 
     .pill {
       display: inline-flex; align-items: center; gap: 8px; background: #f1f5f9;
       padding: 0.7rem 1.3rem; border-radius: 100px; font-size: 0.9rem; font-weight: 800;
-      color: #334155;
     }
-    .dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; animation: blink 2s infinite; }
+    .dot { width: 10px; height: 10px; background: var(--em-mid); border-radius: 50%; animation: pulse 2s infinite; }
 
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; padding: 0 1.5rem; }
+    .bento-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; padding: 0 1.5rem; }
 
-    .card {
+    .prayer-card {
       background: #ffffff; padding: 1.25rem; border-radius: 26px;
       display: flex; flex-direction: column; gap: 10px;
       border: 1px solid rgba(0,0,0,0.02);
-      transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+      transition: 0.4s var(--spring);
     }
 
-    .card.active {
-      background: #f0fdf4; border-color: rgba(16, 185, 129, 0.15);
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.05);
+    .prayer-card.active {
+      background: var(--em-soft); border-color: rgba(16, 185, 129, 0.2);
+      transform: translateZ(10px) scale(1.02);
+      box-shadow: 0 12px 25px -10px rgba(16, 185, 129, 0.15);
     }
 
     .row { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; }
-    .p-name { font-weight: 800; font-size: 0.85rem; color: var(--muted); }
+    .name { font-weight: 800; font-size: 0.85rem; color: var(--muted); }
     .p-time { font-weight: 900; font-size: 1.35rem; color: #1e293b; }
-    .card.active .p-name { color: var(--primary); }
+    .prayer-card.active .name { color: var(--em-mid); }
 
     .badge {
       font-size: 0.6rem; font-weight: 900; padding: 4px 8px; border-radius: 8px;
@@ -93,63 +97,65 @@
     .b-sehri { background: #dcfce7; color: #15803d; }
     .b-iftar { background: #fef3c7; color: #b45309; }
 
-    .wide { grid-column: span 2; flex-direction: row; justify-content: space-between; align-items: center; }
+    .tahajjud { grid-column: span 2; flex-direction: row; justify-content: space-between; align-items: center; }
 
-    @keyframes meshGradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    @keyframes meshFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    @keyframes swoopIn { 0% { opacity: 0; transform: translateY(100px) rotateX(-15deg); } 100% { opacity: 1; transform: translateY(0); } }
+    @keyframes float { 0% { transform: translateY(0) rotateX(0); } 100% { transform: translateY(-10px) rotateX(2deg); } }
+    @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
+    @keyframes dropIn { 0% { opacity: 0; transform: translateY(-20px) rotateX(-30deg); } 100% { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
 
-  <div class="app-wrap">
+  <div class="app-container">
     <header>
-      <p id="date">...</p>
+      <p id="date-text">...</p>
       <h1>WAR SAKEEB</h1>
     </header>
     
-    <main class="main-panel">
+    <main class="dashboard">
       <button id="audio-toggle" class="audio-btn">🔇</button>
-      <div class="hero">
-        <div id="time">00:00:00</div>
+      <div class="hero-timer">
+        <div id="time-display">00:00:00</div>
         <div class="pill">
           <div class="dot"></div>
-          <span id="countdown">Initializing...</span>
+          <span id="countdown">Syncing...</span>
         </div>
       </div>
 
-      <div class="grid" id="grid"></div>
+      <div class="bento-grid" id="prayer-grid"></div>
     </main>
   </div>
 
   <script>
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
 
-    // FILENAME FIX: Capital 'A'
+    // FILENAME FIX: Capital 'A' for GitHub
     const adhan = new Audio('Adhan.mp3'); 
     let audioOn = false;
-    let last = "";
+    let lastPrayer = "";
 
-    const btn = document.getElementById('audio-toggle');
-    btn.onclick = () => {
+    const audioBtn = document.getElementById('audio-toggle');
+    audioBtn.onclick = () => {
       audioOn = !audioOn;
-      btn.innerHTML = audioOn ? "🔊" : "🔇";
-      btn.classList.toggle('active');
-      if(audioOn) adhan.play().then(() => adhan.pause());
+      audioBtn.innerHTML = audioOn ? "🔊" : "🔇";
+      audioBtn.classList.toggle('on');
+      if(audioOn) adhan.play().then(() => adhan.pause()).catch(e => {});
     };
 
-    function start() {
+    function startClock() {
       const now = new Date();
       const timeStr = now.toLocaleTimeString('en-US', { hour12: true, hour: 'numeric', minute: '2-digit', second: '2-digit' });
-      document.getElementById('time').innerHTML = timeStr.replace(' ', '<span class="ampm">') + '</span>';
-      document.getElementById('date').innerText = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+      document.getElementById('time-display').innerHTML = timeStr.replace(' ', '<span class="ampm">') + '</span>';
+      document.getElementById('date-text').innerText = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
       
-      const timings = JSON.parse(localStorage.getItem('p_store'));
-      if (timings) calc(now, timings);
-      requestAnimationFrame(start);
+      const cached = JSON.parse(localStorage.getItem('prayer_cache'));
+      if (cached) updateLogic(now, cached);
+      requestAnimationFrame(startClock);
     }
 
-    function calc(now, t) {
+    function updateLogic(now, t) {
       const list = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
       let next = null;
 
@@ -166,32 +172,34 @@
         const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
         document.getElementById('countdown').innerHTML = `Next: <strong>${next.n}</strong> in ${h}:${m}:${s}`;
         
-        if (audioOn && diff < 1000 && last !== next.n && !['Sunrise', 'Tahajjud'].includes(next.n)) {
-          adhan.currentTime = 0; adhan.play(); last = next.n;
+        // ADHAN TRIGGER
+        if (audioOn && diff < 1000 && lastPrayer !== next.n && !['Sunrise', 'Tahajjud'].includes(next.n)) {
+          adhan.currentTime = 0; adhan.play(); lastPrayer = next.n;
         }
       }
     }
 
-    async function sync() {
-      const cache = localStorage.getItem('p_store');
-      const day = localStorage.getItem('p_day');
+    async function syncData() {
+      const saved = localStorage.getItem('prayer_cache');
+      const savedDay = localStorage.getItem('cache_day');
       const today = new Date().toDateString();
 
-      if (cache && day === today) {
-        render(JSON.parse(cache));
+      // OFFLINE FIRST PERSISTENCE
+      if (saved && savedDay === today) {
+        renderPrayers(JSON.parse(saved));
       } else {
-        navigator.geolocation.getCurrentPosition(async p => {
-          const res = await fetch(`https://api.aladhan.com/v1/timings/${Math.floor(Date.now()/1000)}?latitude=${p.coords.latitude}&longitude=${p.coords.longitude}&method=2`);
+        navigator.geolocation.getCurrentPosition(async pos => {
+          const res = await fetch(`https://api.aladhan.com/v1/timings/${Math.floor(Date.now()/1000)}?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&method=2`);
           const data = await res.json();
-          localStorage.setItem('p_store', JSON.stringify(data.data.timings));
-          localStorage.setItem('p_day', today);
-          render(data.data.timings);
+          localStorage.setItem('prayer_cache', JSON.stringify(data.data.timings));
+          localStorage.setItem('cache_day', today);
+          renderPrayers(data.data.timings);
         });
       }
     }
 
-    function render(t) {
-      const grid = document.getElementById('grid');
+    function renderPrayers(t) {
+      const grid = document.getElementById('prayer-grid');
       const now = new Date();
       const items = [
         {id: "Fajr", l: "Sehri Ends", b: "b-sehri"},
@@ -200,22 +208,26 @@
         {id: "Isha"}, {id: "Tahajjud"}
       ];
 
-      let found = false;
+      let foundNext = false;
       grid.innerHTML = items.map((p, i) => {
         const [h, m] = (t[p.id] || "02:30").split(':');
         const d = new Date(); d.setHours(h, m, 0);
-        let active = "";
-        if (!found && d > now) { active = "active"; found = true; }
+        
+        let activeClass = "";
+        if (!foundNext && d > now) { activeClass = "active"; foundNext = true; }
+        
         const badge = p.l ? `<span class="badge ${p.b}">${p.l}</span>` : "";
+        const delay = 0.5 + (i * 0.08);
+
         return `
-          <div class="card ${active} ${p.id==='Tahajjud'?'wide':''}">
-            <div class="row"><span class="p-name">${p.id}</span>${badge}</div>
+          <div class="prayer-card ${activeClass} ${p.id==='Tahajjud'?'tahajjud':''}" style="animation: dropIn 0.8s var(--spring) ${delay}s both;">
+            <div class="row"><span class="name">${p.id}</span>${badge}</div>
             <span class="p-time">${t[p.id] || "02:30 AM"}</span>
           </div>`;
       }).join('');
     }
 
-    sync(); start();
+    syncData(); startClock();
   </script>
 </body>
 </html>
