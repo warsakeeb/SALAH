@@ -3,105 +3,110 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#10b981">
+  <meta name="theme-color" content="#059669">
   <title>WAR SAKEEB Tracker</title>
   <link rel="manifest" href="manifest.json">
   <style>
-    /* === RESTORED PREMIUM 3D EMERALD THEME === */
+    /* === EMERALD NEON 3D PHYSICS === */
     :root {
-      --emerald-dark: #064e3b;
-      --emerald-mid: #059669;
-      --emerald-light: #ecfdf5;
-      --text-muted: #64748b;
-      --spring: cubic-bezier(0.175, 0.885, 0.32, 1.25);
+      --em-dark: #064e3b;
+      --em-mid: #10b981;
+      --em-glow: #34d399;
+      --bg-glass: rgba(255, 255, 255, 0.9);
+      --spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
 
     body {
-      background: linear-gradient(-45deg, #f0fdf4, #dcfce7, #f8fafc, #ecfdf5);
-      background-size: 300% 300%;
-      animation: ambientBG 12s ease-in-out infinite;
-      color: var(--emerald-dark);
+      background: linear-gradient(-45deg, #064e3b, #065f46, #059669, #10b981);
+      background-size: 400% 400%;
+      animation: ambientBG 15s ease infinite;
       min-height: 100vh;
       display: flex; justify-content: center; align-items: center;
-      perspective: 1200px;
+      perspective: 2000px;
       overflow: hidden;
     }
 
     .app-container {
-      width: 100%; max-width: 420px; padding: 1.2rem;
-      display: flex; flex-direction: column; gap: 1.2rem;
-      animation: containerSwoop 1s var(--spring) both;
+      width: 100%; max-width: 420px; padding: 1rem;
+      display: flex; flex-direction: column; gap: 1.5rem;
       transform-style: preserve-3d;
+      animation: swoopIn 1.2s var(--spring) both;
     }
 
-    header { text-align: center; animation: dropBounce 0.8s var(--spring) 0.2s both; }
-    h1 { font-size: 1.8rem; font-weight: 900; letter-spacing: 4px; color: var(--emerald-dark); text-transform: uppercase; }
-    #date-text { color: var(--text-muted); font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+    header { text-align: center; transform-style: preserve-3d; }
+    h1 { font-size: 2rem; font-weight: 900; letter-spacing: 5px; color: white; text-shadow: 0 5px 15px rgba(0,0,0,0.2); text-transform: uppercase; }
+    #date-text { color: rgba(255,255,255,0.8); font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
 
-    .dashboard-panel {
-      position: relative; background: #ffffff; border-radius: 40px; 
-      box-shadow: 0 30px 60px -15px rgba(6, 78, 59, 0.2);
-      padding-bottom: 1.5rem; overflow: hidden;
-      animation: float3D 6s ease-in-out infinite alternate;
+    .main-card {
+      position: relative; background: var(--bg-glass); border-radius: 45px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 40px 100px -20px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.5);
+      animation: float3D 8s ease-in-out infinite alternate;
       transform-style: preserve-3d;
+      padding-bottom: 2rem;
     }
 
-    .audio-toggle {
-      position: absolute; top: 1.2rem; right: 1.2rem;
-      width: 42px; height: 42px; border-radius: 50%; background: #f1f5f9; border: none;
-      font-size: 1.2rem; display: flex; align-items: center; justify-content: center;
-      z-index: 10; cursor: pointer; transition: 0.3s;
+    .audio-btn {
+      position: absolute; top: 1.5rem; right: 1.5rem;
+      width: 45px; height: 45px; border-radius: 50%; border: none;
+      background: rgba(0,0,0,0.05); cursor: pointer; font-size: 1.2rem;
+      display: flex; align-items: center; justify-content: center; transition: 0.3s;
     }
-    .audio-toggle.on { background: var(--emerald-light); color: var(--emerald-mid); box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
+    .audio-btn.active { background: var(--em-mid); color: white; box-shadow: 0 0 20px var(--em-glow); }
 
-    .hero-section { padding: 3rem 1.5rem 2rem; text-align: center; }
-    #current-time { font-size: 3.8rem; font-weight: 900; color: #1e293b; line-height: 1; margin-bottom: 1.2rem; }
-    .ampm { font-size: 1.2rem; color: var(--text-muted); margin-left: 5px; }
+    .hero { padding: 3.5rem 1.5rem 2rem; text-align: center; }
+    #time { font-size: 4rem; font-weight: 900; color: #1e293b; line-height: 0.9; margin-bottom: 1.5rem; letter-spacing: -2px; }
+    .ampm { font-size: 1.2rem; color: #64748b; margin-left: 5px; font-weight: 700; }
 
-    .countdown-pill {
-      display: inline-flex; align-items: center; gap: 8px; background: #f1f5f9;
-      padding: 0.7rem 1.2rem; border-radius: 100px; font-size: 0.9rem; font-weight: 800;
+    .pill {
+      display: inline-flex; align-items: center; gap: 10px; background: #f1f5f9;
+      padding: 0.8rem 1.5rem; border-radius: 100px; font-size: 0.95rem; font-weight: 800;
     }
-    .dot { width: 10px; height: 10px; background: var(--emerald-mid); border-radius: 50%; animation: pulse 1.5s infinite; }
+    .dot { width: 10px; height: 10px; background: var(--em-mid); border-radius: 50%; animation: pulse 2s infinite; box-shadow: 0 0 10px var(--em-glow); }
 
-    .prayer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; padding: 0 1.5rem; }
-    
-    .prayer-card {
-      background: #f8fafc; padding: 1.2rem; border-radius: 25px;
-      display: flex; flex-direction: column; gap: 8px; transition: 0.4s var(--spring);
-      border: 1px solid transparent; position: relative; overflow: hidden;
-    }
+    .bento-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; padding: 0 1.5rem; }
 
-    .prayer-card.active {
-      background: var(--emerald-light); border-color: rgba(16, 185, 129, 0.2);
-      box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.1);
-    }
-    .prayer-card.active::after {
-      content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
-      transform: skewX(-25deg); animation: shine 3s infinite;
+    .p-card {
+      background: white; padding: 1.3rem; border-radius: 28px;
+      display: flex; flex-direction: column; gap: 10px; transition: 0.4s var(--spring);
+      border: 1px solid rgba(0,0,0,0.03); position: relative; overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.02);
     }
 
-    .p-row { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; }
-    .p-name { font-weight: 800; font-size: 0.9rem; color: var(--text-muted); }
-    .p-time { font-weight: 900; font-size: 1.3rem; color: var(--emerald-dark); }
-    .prayer-card.active .p-name { color: var(--emerald-mid); }
+    .p-card.active {
+      background: var(--em-dark); border-color: var(--em-mid);
+      box-shadow: 0 15px 30px -5px rgba(5, 150, 105, 0.4);
+    }
+    .p-card.active::before {
+      content: ''; position: absolute; top: 0; left: -150%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transform: skewX(-20deg); animation: shine 2.5s infinite;
+    }
 
-    .badge { font-size: 0.6rem; font-weight: 900; padding: 3px 7px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .badge-sehri { background: #dcfce7; color: #166534; box-shadow: 0 2px 8px rgba(22, 101, 52, 0.1); }
-    .badge-iftar { background: #fef3c7; color: #92400e; box-shadow: 0 2px 8px rgba(146, 64, 14, 0.1); }
+    .row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+    .name { font-weight: 800; font-size: 0.9rem; color: #94a3b8; }
+    .p-time { font-weight: 900; font-size: 1.4rem; color: #1e293b; }
+    .p-card.active .name { color: var(--em-glow); }
+    .p-card.active .p-time { color: white; }
 
-    .tahajjud { grid-column: span 2; flex-direction: row; justify-content: space-between; align-items: center; }
+    /* NEON BADGES */
+    .neon-badge {
+      font-size: 0.6rem; font-weight: 900; padding: 4px 8px; border-radius: 8px;
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+    .nb-sehri { background: #064e3b; color: #34d399; box-shadow: 0 0 12px rgba(52, 211, 153, 0.4); border: 1px solid #059669; }
+    .nb-iftar { background: #451a03; color: #fbbf24; box-shadow: 0 0 12px rgba(251, 191, 36, 0.4); border: 1px solid #d97706; }
 
-    @keyframes containerSwoop { 0% { opacity: 0; transform: translateY(60px) rotateX(-10deg); } 100% { opacity: 1; transform: translateY(0); } }
-    @keyframes dropBounce { 0% { transform: translateY(-30px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
-    @keyframes float3D { 0% { transform: rotateX(0); } 100% { transform: rotateX(3deg) translateY(-5px); } }
-    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } }
-    @keyframes shine { 0% { left: -100%; } 100% { left: 200%; } }
-    @keyframes swingDown { 0% { opacity: 0; transform: rotateX(-90deg); } 100% { opacity: 1; transform: rotateX(0); } }
+    .wide { grid-column: span 2; flex-direction: row; align-items: center; }
+
+    @keyframes swoopIn { 0% { opacity: 0; transform: translateY(100px) rotateX(-20deg) scale(0.8); } 100% { opacity: 1; transform: translateY(0); } }
+    @keyframes float3D { 0% { transform: rotateX(0) rotateY(0); } 100% { transform: rotateX(5deg) rotateY(-2deg) translateY(-10px); } }
     @keyframes ambientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.7); } }
+    @keyframes shine { 0% { left: -150%; } 100% { left: 150%; } }
+    @keyframes drop { 0% { opacity: 0; transform: translateY(-50px) rotateX(-90deg); } 100% { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
@@ -112,128 +117,118 @@
       <h1>WAR SAKEEB</h1>
     </header>
     
-    <main class="dashboard-panel">
-      <button id="audio-btn" class="audio-toggle">🔇</button>
-      <div class="hero-section">
-        <div id="current-time">00:00:00</div>
-        <div class="countdown-pill">
+    <main class="main-card">
+      <button id="audio-toggle" class="audio-btn">🔇</button>
+      <div class="hero">
+        <div id="time">00:00:00</div>
+        <div class="pill">
           <div class="dot"></div>
-          <span id="countdown-text">Syncing...</span>
+          <span id="countdown">Initializing...</span>
         </div>
       </div>
 
-      <div class="prayer-grid" id="prayer-grid"></div>
+      <div class="bento-grid" id="grid"></div>
     </main>
   </div>
 
   <script>
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
 
-    // FILENAME FIX: Capital 'A' to match GitHub exactly
+    // FILENAME FIX: EXACT MATCH FOR GITHUB
     const adhan = new Audio('Adhan.mp3'); 
-    let audioEnabled = false;
-    let lastPlayed = "";
+    let audioOn = false;
+    let lastPlay = "";
 
-    const audioBtn = document.getElementById('audio-btn');
+    const audioBtn = document.getElementById('audio-toggle');
     audioBtn.onclick = () => {
-      audioEnabled = !audioEnabled;
-      audioBtn.innerHTML = audioEnabled ? "🔊" : "🔇";
-      audioBtn.classList.toggle('on');
-      if(audioEnabled) adhan.play().then(() => adhan.pause()).catch(e => {});
+      audioOn = !audioOn;
+      audioBtn.innerHTML = audioOn ? "🔊" : "🔇";
+      audioBtn.classList.toggle('active');
+      if(audioOn) adhan.play().then(() => adhan.pause()).catch(e => {});
     };
 
-    function runEngine() {
+    function startClock() {
       const now = new Date();
       const timeStr = now.toLocaleTimeString('en-US', { hour12: true, hour: 'numeric', minute: '2-digit', second: '2-digit' });
-      document.getElementById('current-time').innerHTML = timeStr.replace(' ', '<span class="ampm">') + '</span>';
+      document.getElementById('time').innerHTML = timeStr.replace(' ', '<span class="ampm">') + '</span>';
       document.getElementById('date-text').innerText = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
       
-      const timings = JSON.parse(localStorage.getItem('cached_timings'));
-      if (timings) {
-        updateCountdown(now, timings);
-      }
-      requestAnimationFrame(runEngine);
+      const cached = JSON.parse(localStorage.getItem('prayers'));
+      if (cached) logic(now, cached);
+      requestAnimationFrame(startClock);
     }
 
-    function updateCountdown(now, timings) {
-      const pNames = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
+    function logic(now, t) {
+      const list = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
       let next = null;
 
-      for (let name of pNames) {
-        const [h, m] = timings[name].split(':');
-        const pDate = new Date(); pDate.setHours(h, m, 0);
-        if (pDate > now) { next = { name, date: pDate }; break; }
+      for (let n of list) {
+        const [h, m] = t[n].split(':');
+        const d = new Date(); d.setHours(h, m, 0);
+        if (d > now) { next = { n, d }; break; }
       }
 
       if (next) {
-        const diff = next.date - now;
+        const diff = next.d - now;
         const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
         const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
         const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
-        document.getElementById('countdown-text').innerHTML = `Next: <strong>${next.name}</strong> in ${h}:${m}:${s}`;
+        document.getElementById('countdown').innerHTML = `Next: <strong>${next.n}</strong> in ${h}:${m}:${s}`;
         
         // ADHAN TRIGGER
-        if (audioEnabled && diff < 1000 && lastPlayed !== next.name && !['Sunrise', 'Tahajjud'].includes(next.name)) {
-          adhan.currentTime = 0; adhan.play(); lastPlayed = next.name;
+        if (audioOn && diff < 1000 && lastPlay !== next.n && !['Sunrise', 'Tahajjud'].includes(next.n)) {
+          adhan.currentTime = 0; adhan.play(); lastPlay = next.n;
         }
       }
     }
 
-    async function initApp() {
-      const saved = localStorage.getItem('cached_timings');
-      const savedDate = localStorage.getItem('cached_date');
+    async function sync() {
+      const saved = localStorage.getItem('prayers');
+      const savedD = localStorage.getItem('day');
       const today = new Date().toDateString();
 
-      // TRUE OFFLINE CHECK
-      if (saved && savedDate === today) {
+      // TRUE OFFLINE PERSISTENCE
+      if (saved && savedD === today) {
         render(JSON.parse(saved));
       } else {
-        navigator.geolocation.getCurrentPosition(async pos => {
-          try {
-            const res = await fetch(`https://api.aladhan.com/v1/timings/${Math.floor(Date.now()/1000)}?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&method=2`);
-            const data = await res.json();
-            localStorage.setItem('cached_timings', JSON.stringify(data.data.timings));
-            localStorage.setItem('cached_date', today);
-            render(data.data.timings);
-          } catch(e) { console.log("Fetch failed"); }
+        navigator.geolocation.getCurrentPosition(async p => {
+          const res = await fetch(`https://api.aladhan.com/v1/timings/${Math.floor(Date.now()/1000)}?latitude=${p.coords.latitude}&longitude=${p.coords.longitude}&method=2`);
+          const data = await res.json();
+          localStorage.setItem('prayers', JSON.stringify(data.data.timings));
+          localStorage.setItem('day', today);
+          render(data.data.timings);
         });
       }
     }
 
     function render(t) {
-      const grid = document.getElementById('prayer-grid');
+      const grid = document.getElementById('grid');
       const now = new Date();
-      const prayers = [
-        {id: "Fajr", label: "Sehri Ends", badge: "badge-sehri"},
+      const items = [
+        {id: "Fajr", l: "Sehri Ends", b: "nb-sehri"},
         {id: "Sunrise"}, {id: "Dhuhr"}, {id: "Asr"},
-        {id: "Maghrib", label: "Iftar", badge: "badge-iftar"},
+        {id: "Maghrib", l: "Iftar", b: "nb-iftar"},
         {id: "Isha"}, {id: "Tahajjud"}
       ];
 
-      let nextFound = false;
-      grid.innerHTML = prayers.map((p, i) => {
-        const [h, m] = (t[p.id] || "02:00").split(':');
-        const pDate = new Date(); pDate.setHours(h, m, 0);
+      let found = false;
+      grid.innerHTML = items.map((p, i) => {
+        const [h, m] = (t[p.id] || "02:30").split(':');
+        const d = new Date(); d.setHours(h, m, 0);
         
-        let active = "";
-        if (!nextFound && pDate > now) { active = "active"; nextFound = true; }
+        let act = "";
+        if (!found && d > now) { act = "active"; found = true; }
         
-        const delay = 0.5 + (i * 0.1);
-        const badge = p.label ? `<span class="badge ${p.badge}">${p.label}</span>` : "";
-
+        const badge = p.l ? `<span class="neon-badge ${p.b}">${p.l}</span>` : "";
         return `
-          <div class="prayer-card ${active} ${p.id==='Tahajjud'?'tahajjud':''}" style="animation: swingDown 0.8s var(--spring) ${delay}s both;">
-            <div class="p-row">
-              <span class="p-name">${p.id}</span>
-              ${badge}
-            </div>
-            <span class="p-time">${t[p.id] || "02:00"}</span>
-          </div>
-        `;
+          <div class="p-card ${act} ${p.id==='Tahajjud'?'wide':''}" style="animation: drop 0.8s var(--spring) ${0.5+(i*0.1)}s both;">
+            <div class="row"><span class="name">${p.id}</span>${badge}</div>
+            <span class="p-time">${t[p.id] || "02:30 AM"}</span>
+          </div>`;
       }).join('');
     }
 
-    initApp(); runEngine();
+    sync(); startClock();
   </script>
 </body>
 </html>
