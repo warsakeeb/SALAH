@@ -6,121 +6,54 @@
   <meta name="theme-color" content="#f1f5f9">
   <title>WAR SAKEEB Tracker</title>
   
-  <link rel="manifest" href="./manifest.json">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   
   <style>
     /* === BENTO BOX GRID THEME === */
-    :root {
-      --text-dark: #020617;
-      --text-muted: #64748b;
-      --active-bg: #eef2ff; 
-      --active-text: #4338ca; 
-      --spring-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.25);
-      --spring-smooth: cubic-bezier(0.23, 1, 0.32, 1);
-    }
-
+    :root { --text-dark: #020617; --text-muted: #64748b; --active-bg: #eef2ff; --active-text: #4338ca; --spring-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.25); --spring-smooth: cubic-bezier(0.23, 1, 0.32, 1); }
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
-
-    body {
-      background: linear-gradient(-45deg, #e2e8f0, #cbd5e1, #f8fafc, #e0e7ff);
-      background-size: 300% 300%;
-      animation: ambientBG 12s ease-in-out infinite;
-      color: var(--text-dark);
-      min-height: 100vh;
-      display: flex; justify-content: center; align-items: center; 
-      overflow-x: hidden;
-      perspective: 1500px; 
-    }
-
-    .app-container {
-      width: 100%; max-width: 440px; padding: 1.5rem;
-      display: flex; flex-direction: column; gap: 1.2rem;
-      animation: containerSwoop 1.2s var(--spring-elastic) both;
-      transform-style: preserve-3d;
-      margin: auto;
-    }
-
-    /* === HEADER === */
+    body { background: linear-gradient(-45deg, #e2e8f0, #cbd5e1, #f8fafc, #e0e7ff); background-size: 300% 300%; animation: ambientBG 12s ease-in-out infinite; color: var(--text-dark); min-height: 100vh; display: flex; justify-content: center; align-items: center; overflow-x: hidden; perspective: 1500px; }
+    .app-container { width: 100%; max-width: 440px; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.2rem; animation: containerSwoop 1.2s var(--spring-elastic) both; transform-style: preserve-3d; margin: auto; }
     header { display: flex; flex-direction: column; align-items: center; justify-content: center; animation: dropBounce 1s var(--spring-elastic) 0.2s both; }
     h1 { font-size: 1.8rem; font-weight: 900; letter-spacing: 4px; color: var(--text-dark); text-transform: uppercase; margin-bottom: 0.2rem; position: relative; overflow: hidden; }
     h1::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent); transform: skewX(-20deg); animation: metallicShine 3s infinite; }
-    
     .subtitle-group { display: flex; flex-direction: column; align-items: center; gap: 4px; }
     #date-text { color: var(--text-muted); font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
     #location-text { font-size: 0.8rem; font-weight: 800; letter-spacing: 1px; color: var(--active-text); }
-
-    /* === DASHBOARD === */
-    .dashboard-panel {
-      position: relative; background: #ffffff; border-radius: 40px; 
-      box-shadow: 0 30px 60px -15px rgba(15, 23, 42, 0.2), 0 0 0 1px rgba(255,255,255,0.5);
-      overflow: hidden; animation: float3D 6s ease-in-out infinite alternate;
-      will-change: transform; transform-style: preserve-3d;
-    }
-
-    .audio-toggle {
-      position: absolute; top: 1.2rem; right: 1.2rem;
-      width: 42px; height: 42px; border-radius: 50%; background: #f1f5f9; border: none; outline: none;
-      font-size: 1.2rem; display: flex; align-items: center; justify-content: center;
-      cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: all 0.3s var(--spring-elastic);
-      z-index: 20; opacity: 0; animation: popUp 0.6s var(--spring-elastic) 0.8s both;
-    }
+    .dashboard-panel { position: relative; background: #ffffff; border-radius: 40px; box-shadow: 0 30px 60px -15px rgba(15, 23, 42, 0.2), 0 0 0 1px rgba(255,255,255,0.5); overflow: hidden; animation: float3D 6s ease-in-out infinite alternate; will-change: transform; transform-style: preserve-3d; }
+    .audio-toggle { position: absolute; top: 1.2rem; right: 1.2rem; width: 42px; height: 42px; border-radius: 50%; background: #f1f5f9; border: none; outline: none; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: all 0.3s var(--spring-elastic); z-index: 20; opacity: 0; animation: popUp 0.6s var(--spring-elastic) 0.8s both; }
     .audio-toggle:active { transform: scale(0.85); }
     .audio-toggle.on { background: var(--active-bg); box-shadow: 0 4px 15px rgba(67, 56, 202, 0.2); }
-
     .hero-time-section { padding: 2.5rem 1.5rem 2rem; text-align: center; }
     #current-time { font-size: 3.5rem; font-weight: 800; letter-spacing: -2px; color: var(--text-dark); font-variant-numeric: tabular-nums; line-height: 1; margin-bottom: 1.5rem; animation: scalePop 0.8s var(--spring-elastic) 0.6s both; }
     .ampm-text { font-size: 1.1rem; font-weight: 800; color: var(--text-muted); margin-left: 4px; }
-
     .action-row { display: flex; justify-content: center; align-items: center; animation: popUp 0.6s var(--spring-elastic) 0.8s both; }
     .countdown-pill { display: inline-flex; align-items: center; gap: 8px; background: #f1f5f9; padding: 0.75rem 1.5rem; border-radius: 100px; font-size: 0.95rem; font-weight: 700; color: var(--text-dark); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
     .countdown-dot { width: 10px; height: 10px; background: #ef4444; border-radius: 50%; animation: heartbeat 1.2s infinite ease-in-out; }
-
-    /* === BENTO GRID LAYOUT === */
     .prayer-list-wrapper { background: #f8fafc; padding: 1.5rem; perspective: 1000px; }
-    
-    .prayer-list { 
-      display: grid; 
-      grid-template-columns: 1fr 1fr; 
-      gap: 0.8rem; 
-      transform-style: preserve-3d; 
-    }
-
-    .prayer-item {
-      position: relative; overflow: hidden; -webkit-mask-image: -webkit-radial-gradient(white, black);
-      display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 12px;
-      padding: 1rem 1.2rem; background: #ffffff; border-radius: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-      transition: transform 0.15s var(--spring-smooth), box-shadow 0.15s var(--spring-smooth);
-      transform-origin: top center; cursor: pointer; user-select: none; will-change: transform;
-    }
+    .prayer-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; transform-style: preserve-3d; }
+    .prayer-item { position: relative; overflow: hidden; -webkit-mask-image: -webkit-radial-gradient(white, black); display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 12px; padding: 1rem 1.2rem; background: #ffffff; border-radius: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); transition: transform 0.15s var(--spring-smooth), box-shadow 0.15s var(--spring-smooth); transform-origin: top center; cursor: pointer; user-select: none; will-change: transform; }
     .prayer-item:active { transform: scale(0.94) rotateX(5deg); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-
     .prayer-top-row { display: flex; align-items: flex-start; justify-content: space-between; width: 100%; gap: 8px; }
     .name-group { display: flex; align-items: center; gap: 8px; }
     .prayer-name { font-weight: 800; font-size: 1rem; color: var(--text-muted); white-space: nowrap; }
     .prayer-time { font-weight: 800; font-size: 1.3rem; color: var(--text-dark); z-index: 2; pointer-events: none; }
-
     .icon-base { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
     .icon-day { background: #f59e0b; }
     .icon-night { background: transparent; box-shadow: inset -3px -3px 0 0 #475569; }
-
     .event-badge { font-size: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 6px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); white-space: nowrap; }
     .badge-sehri { background: #e0f2fe; color: #0284c7; }
     .badge-iftar { background: #fce7f3; color: #db2777; }
     .badge-tahajjud { background: #ede9fe; color: #6d28d9; }
-
     .prayer-item[data-name="Tahajjud"] { grid-column: span 2; flex-direction: row; align-items: center; justify-content: space-between; }
     .prayer-item[data-name="Tahajjud"] .prayer-top-row { width: auto; justify-content: flex-start; align-items: center; }
-
-    /* ACTIVE HIGHLIGHT */
     .prayer-item.active { background: var(--active-bg); transform: scale(1); box-shadow: inset 0 0 0 1px rgba(67, 56, 202, 0.15), 0 8px 15px rgba(0,0,0,0.03); z-index: 10; }
     .prayer-item.active::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent); transform: skewX(-20deg); animation: metallicShine 3s infinite ease-in-out; pointer-events: none; }
     .prayer-item.active .prayer-name, .prayer-item.active .prayer-time { color: var(--active-text); }
     .prayer-item.active .icon-day { background: var(--active-text); box-shadow: 0 0 8px rgba(67, 56, 202, 0.3); }
     .prayer-item.active .icon-night { box-shadow: inset -3px -3px 0 0 var(--active-text); }
-
     @keyframes containerSwoop { 0% { opacity: 0; transform: translateZ(-500px) rotateX(-20deg) translateY(100px); } 100% { opacity: 1; transform: translateZ(0) rotateX(0) translateY(0); } }
     @keyframes dropBounce { 0% { opacity: 0; transform: translateY(-50px) scale(0.8); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
     @keyframes swingDown { 0% { opacity: 0; transform: rotateX(-90deg) translateY(-20px); } 100% { opacity: 1; transform: rotateX(0deg) translateY(0); } }
@@ -163,9 +96,15 @@
   </div>
 
   <script>
-    // --- NEW: BOOT UP THE OFFLINE SERVICE WORKER ---
+    // 💥 THIS CODE DESTROYS THE OLD BROKEN CACHE ON YOUR PHONE
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js');
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for(let registration of registrations) {
+          registration.unregister();
+        }
+      });
+      // Register the new one with a random string so it forces an update
+      navigator.serviceWorker.register('sw.js?v=' + Math.random());
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -176,7 +115,7 @@
       const countdownText = document.getElementById('countdown-text');
       const audioToggle = document.getElementById('audio-toggle');
 
-      const adhanAudio = new Audio('Adhan.mp3'); 
+      const adhanAudio = new Audio('adhan.mp3'); 
       let isAudioEnabled = false;
       let lastPlayedPrayer = null;
 
