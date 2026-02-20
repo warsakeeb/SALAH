@@ -7,13 +7,7 @@
   "theme_color": "#f1f5f9",
   "icons": [
     {
-      "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Star_and_Crescent.svg/192px-Star_and_Crescent.svg.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Star_and_Crescent.svg/512px-Star_and_Crescent.svg.png",
+      "src": "icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
