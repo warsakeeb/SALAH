@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#f1f5f9">
+  <title>WAR SAKEEB Tracker</title>
+  <style>
+    /* === BENTO BOX GRID THEME === */
+    :root {
+      --text-dark: #020617;
+      --text-muted: #64748b;
+      --active-bg: #eef2ff; 
+      --active-text: #4338ca; 
+      --spring-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.25);
+      --spring-smooth: cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      background: linear-gradient(-45deg, #e2e8f0, #cbd5e1, #f8fafc, #e0e7ff);
+      background-size: 300% 300%;
+      animation: ambientBG 12s ease-in-out infinite;
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex; justify-content: center; align-items: center; 
+      overflow-x: hidden;
+      perspective: 1500px; 
+    }
+
+    .app-container {
+      width: 100%; max-width: 440px; padding: 1.5rem;
+      display: flex; flex-direction: column; gap: 1.2rem;
+      animation: containerSwoop 1.2s var(--spring-elastic) both;
+      transform-style: preserve-3d;
+      margin: auto;
+    }
+
+    /* === HEADER === */
+    header { display: flex; flex-direction: column; align-items: center; justify-content: center; animation: dropBounce 1s var(--spring-elastic) 0.2s both; }
+    h1 { font-size: 1.8rem; font-weight: 900; letter-spacing: 4px; color: var(--text-dark); text-transform: uppercase; margin-bottom: 0.2rem; position: relative; overflow: hidden; }
+    h1::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent); transform: skewX(-20deg); animation: metallicShine 3s infinite; }
+    
+    .subtitle-group { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    #date-text { color: var(--text-muted); font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+    #location-text { font-size: 0.8rem; font-weight: 800; letter-spacing: 1px; color: var(--active-text); }
+
+    /* === DASHBOARD === */
+    .dashboard-panel {
+      position: relative; background: #ffffff; border-radius: 40px; 
+      box-shadow: 0 30px 60px -15px rgba(15, 23, 42, 0.2), 0 0 0 1px rgba(255,255,255,0.5);
+      overflow: hidden; animation: float3D 6s ease-in-out infinite alternate;
+      will-change: transform; transform-style: preserve-3d;
+    }
+
+    .audio-toggle {
+      position: absolute; top: 1.2rem; right: 1.2rem;
+      width: 42px; height: 42px; border-radius: 50%; background: #f1f5f9; border: none; outline: none;
+      font-size: 1.2rem; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: all 0.3s var(--spring-elastic);
+      z-index: 20; opacity: 0; animation: popUp 0.6s var(--spring-elastic) 0.8s both;
+    }
+    .audio-toggle:active { transform: scale(0.85); }
+    .audio-toggle.on { background: var(--active-bg); box-shadow: 0 4px 15px rgba(67, 56, 202, 0.2); }
+
+    .hero-time-section { padding: 2.5rem 1.5rem 2rem; text-align: center; }
+    #current-time { font-size: 3.5rem; font-weight: 800; letter-spacing: -2px; color: var(--text-dark); font-variant-numeric: tabular-nums; line-height: 1; margin-bottom: 1.5rem; animation: scalePop 0.8s var(--spring-elastic) 0.6s both; }
+    .ampm-text { font-size: 1.1rem; font-weight: 800; color: var(--text-muted); margin-left: 4px; }
+
+    .action-row { display: flex; justify-content: center; align-items: center; animation: popUp 0.6s var(--spring-elastic) 0.8s both; }
+    .countdown-pill { display: inline-flex; align-items: center; gap: 8px; background: #f1f5f9; padding: 0.75rem 1.5rem; border-radius: 100px; font-size: 0.95rem; font-weight: 700; color: var(--text-dark); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+    .countdown-dot { width: 10px; height: 10px; background: #ef4444; border-radius: 50%; animation: heartbeat 1.2s infinite ease-in-out; }
+
+    /* === BENTO GRID LAYOUT === */
+    .prayer-list-wrapper { background: #f8fafc; padding: 1.5rem; perspective: 1000px; }
+    
+    .prayer-list { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 0.8rem; 
+      transform-style: preserve-3d; 
+    }
+
+    .prayer-item {
+      position: relative; overflow: hidden; -webkit-mask-image: -webkit-radial-gradient(white, black);
+      display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 12px;
+      padding: 1rem 1.2rem; background: #ffffff; border-radius: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      transition: transform 0.15s var(--spring-smooth), box-shadow 0.15s var(--spring-smooth);
+      transform-origin: top center; cursor: pointer; user-select: none; will-change: transform;
+    }
+    .prayer-item:active { transform: scale(0.94) rotateX(5deg); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+
+    /* The new top row structure ensures no text overlap */
+    .prayer-top-row {
+      display: flex; align-items: flex-start; justify-content: space-between; 
+      width: 100%; gap: 8px;
+    }
+    
+    .name-group { display: flex; align-items: center; gap: 8px; }
+    .prayer-name { font-weight: 800; font-size: 1rem; color: var(--text-muted); white-space: nowrap; }
+    .prayer-time { font-weight: 800; font-size: 1.3rem; color: var(--text-dark); z-index: 2; pointer-events: none; }
+
+    .icon-base { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .icon-day { background: #f59e0b; }
+    .icon-night { background: transparent; box-shadow: inset -3px -3px 0 0 #475569; }
+
+    /* Event Badges - Now natively flowing in the flexbox */
+    .event-badge { 
+      font-size: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; 
+      padding: 4px 6px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+      white-space: nowrap; /* Prevents text from breaking into two lines */
+    }
+    .badge-sehri { background: #e0f2fe; color: #0284c7; }
+    .badge-iftar { background: #fce7f3; color: #db2777; }
+    .badge-tahajjud { background: #ede9fe; color: #6d28d9; }
+
+    /* Tahajjud stretches across the whole bottom row */
+    .prayer-item[data-name="Tahajjud"] {
+      grid-column: span 2;
+      flex-direction: row; 
+      align-items: center; 
+      justify-content: space-between;
+    }
+    .prayer-item[data-name="Tahajjud"] .prayer-top-row {
+      width: auto; justify-content: flex-start; align-items: center;
+    }
+
+    /* ACTIVE HIGHLIGHT */
+    .prayer-item.active { background: var(--active-bg); transform: scale(1); box-shadow: inset 0 0 0 1px rgba(67, 56, 202, 0.15), 0 8px 15px rgba(0,0,0,0.03); z-index: 10; }
+    .prayer-item.active::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent); transform: skewX(-20deg); animation: metallicShine 3s infinite ease-in-out; pointer-events: none; }
+    .prayer-item.active .prayer-name, .prayer-item.active .prayer-time { color: var(--active-text); }
+    .prayer-item.active .icon-day { background: var(--active-text); box-shadow: 0 0 8px rgba(67, 56, 202, 0.3); }
+    .prayer-item.active .icon-night { box-shadow: inset -3px -3px 0 0 var(--active-text); }
+
+    @keyframes containerSwoop { 0% { opacity: 0; transform: translateZ(-500px) rotateX(-20deg) translateY(100px); } 100% { opacity: 1; transform: translateZ(0) rotateX(0) translateY(0); } }
+    @keyframes dropBounce { 0% { opacity: 0; transform: translateY(-50px) scale(0.8); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes swingDown { 0% { opacity: 0; transform: rotateX(-90deg) translateY(-20px); } 100% { opacity: 1; transform: rotateX(0deg) translateY(0); } }
+    @keyframes float3D { 0% { transform: translateY(0) rotateX(0deg) rotateY(0deg); } 50% { transform: translateY(-8px) rotateX(2deg) rotateY(-1deg); } 100% { transform: translateY(0) rotateX(0deg) rotateY(0deg); } }
+    @keyframes ambientBG { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    @keyframes scalePop { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
+    @keyframes popUp { 0% { opacity: 0; transform: translateY(20px) scale(0.8); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes heartbeat { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.6); opacity: 0.5; } }
+    @keyframes metallicShine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <header>
+      <h1>WAR SAKEEB</h1>
+      <div class="subtitle-group">
+        <p id="date-text">Loading...</p>
+        <p id="location-text">📍 Locating...</p>
+      </div>
+    </header>
+    
+    <main class="dashboard-panel">
+      <button id="audio-toggle" class="audio-toggle" title="Toggle Adhan">🔇</button>
+
+      <div class="hero-time-section">
+        <div id="current-time">00:00:00</div>
+        <div class="action-row">
+          <div class="countdown-pill">
+            <div class="countdown-dot"></div>
+            <span id="countdown-text">Calculating...</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="prayer-list-wrapper">
+        <div class="prayer-list" id="prayer-list"></div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const prayerList = document.getElementById('prayer-list');
+      const timeDisplay = document.getElementById('current-time');
+      const dateText = document.getElementById('date-text');
+      const locationText = document.getElementById('location-text');
+      const countdownText = document.getElementById('countdown-text');
+      const audioToggle = document.getElementById('audio-toggle');
+
+      const adhanAudio = new Audio('adhan.mp3'); 
+      let isAudioEnabled = false;
+      let lastPlayedPrayer = null;
+
+      audioToggle.addEventListener('click', () => {
+        isAudioEnabled = !isAudioEnabled;
+        if (isAudioEnabled) {
+          audioToggle.classList.add('on'); audioToggle.innerHTML = '🔊';
+          adhanAudio.play().then(() => adhanAudio.pause()).catch(e => console.log("Please ensure adhan.mp3 exists."));
+        } else {
+          audioToggle.classList.remove('on'); audioToggle.innerHTML = '🔇';
+          adhanAudio.pause(); adhanAudio.currentTime = 0;
+        }
+      });
+
+      dateText.textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+
+      let upcomingList = [];
+
+      function parseTimeString(timeStr) {
+        return timeStr.split(' ')[0];
+      }
+
+      function createDateFromTime(timeStr, offsetDays = 0) {
+        const cleanTime = parseTimeString(timeStr);
+        const [hours, minutes] = cleanTime.split(':').map(Number);
+        const date = new Date();
+        date.setDate(date.getDate() + offsetDays);
+        date.setHours(hours, minutes, 0, 0);
+        return date;
+      }
+
+      function convertTo12Hour(dateObj) {
+        let hours = dateObj.getHours();
+        let minutes = String(dateObj.getMinutes()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; 
+        return `${hours}:${minutes} <span class="ampm-text">${ampm}</span>`;
+      }
+
+      function runEngine() {
+        const now = new Date();
+        let timeString = now.toLocaleTimeString('en-US', { hour12: true, hour: 'numeric', minute: '2-digit', second: '2-digit' });
+        const parts = timeString.split(' ');
+        if(parts.length === 2) {
+          timeDisplay.innerHTML = `${parts[0]}<span class="ampm-text">${parts[1]}</span>`;
+        } else {
+          timeDisplay.textContent = timeString;
+        }
+
+        if (upcomingList.length > 0) updateCountdown(now);
+        requestAnimationFrame(runEngine);
+      }
+      requestAnimationFrame(runEngine);
+
+      function updateCountdown(now) {
+        let nextPrayer = null;
+
+        for (let i = 0; i < upcomingList.length; i++) {
+          if (upcomingList[i].dateObj > now) {
+            nextPrayer = upcomingList[i]; break;
+          }
+        }
+
+        if (nextPrayer) {
+          const diffMs = nextPrayer.dateObj - now;
+          const diffHrs = Math.floor((diffMs % 86400000) / 3600000);
+          const diffMins = Math.floor((diffMs % 3600000) / 60000);
+          const diffSecs = Math.floor((diffMs % 60000) / 1000);
+
+          const h = String(diffHrs).padStart(2, '0');
+          const m = String(diffMins).padStart(2, '0');
+          const s = String(diffSecs).padStart(2, '0');
+
+          countdownText.innerHTML = `Next: <strong>${nextPrayer.name}</strong> in ${h}:${m}:${s}`;
+
+          if (diffHrs === 0 && diffMins === 0 && diffSecs === 0 && isAudioEnabled) {
+            if (lastPlayedPrayer !== nextPrayer.name && nextPrayer.name !== 'Tahajjud' && nextPrayer.name !== 'Sunrise') {
+              adhanAudio.currentTime = 0; adhanAudio.play(); lastPlayedPrayer = nextPrayer.name;
+            }
+          }
+        } else {
+          countdownText.innerHTML = "Nighttime. Next prayer tomorrow.";
+        }
+      }
+
+      async function initializeData(lat, lng) {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = today.getMonth() + 1; 
+        const day = today.getDate();
+
+        const cacheKey = `war_sakeeb_data_${year}_${month}`;
+        const cachedData = localStorage.getItem(cacheKey);
+
+        if (cachedData) {
+          locationText.textContent = "📍 Memory Cache (Offline)";
+          const monthData = JSON.parse(cachedData);
+          renderPrayers(monthData[day - 1].timings);
+        } else {
+          try {
+            countdownText.innerHTML = "Fetching calendar...";
+            const res = await fetch(`https://api.aladhan.com/v1/calendar/${year}/${month}?latitude=${lat}&longitude=${lng}&method=2`);
+            const data = await res.json();
+            
+            localStorage.setItem(cacheKey, JSON.stringify(data.data)); 
+            locationText.textContent = "📍 Live Synced";
+            renderPrayers(data.data[day - 1].timings);
+          } catch(err) {
+            countdownText.innerHTML = "Internet required for first load.";
+          }
+        }
+      }
+
+      function renderPrayers(timings) {
+        const now = new Date();
+        
+        const maghribTime = createDateFromTime(timings.Maghrib);
+        const tomorrowFajrTime = createDateFromTime(timings.Fajr, 1); 
+        const nightDurationMs = tomorrowFajrTime.getTime() - maghribTime.getTime();
+        const tahajjudTime = new Date(maghribTime.getTime() + (nightDurationMs * (2/3)));
+
+        const timeline = [
+          { name: 'Fajr', dateObj: createDateFromTime(timings.Fajr), type: 'night', badge: 'badge-sehri', badgeText: 'Sehri Ends' },
+          { name: 'Sunrise', dateObj: createDateFromTime(timings.Sunrise), type: 'day' },
+          { name: 'Dhuhr', dateObj: createDateFromTime(timings.Dhuhr), type: 'day' },
+          { name: 'Asr', dateObj: createDateFromTime(timings.Asr), type: 'day' },
+          { name: 'Maghrib', dateObj: createDateFromTime(timings.Maghrib), type: 'night', badge: 'badge-iftar', badgeText: 'Iftar' },
+          { name: 'Isha', dateObj: createDateFromTime(timings.Isha), type: 'night' },
+          { name: 'Tahajjud', dateObj: tahajjudTime, type: 'night', badge: 'badge-tahajjud', badgeText: 'Last 3rd' }
+        ];
+
+        prayerList.innerHTML = ''; 
+        upcomingList = []; 
+        let nextPrayerFound = false;
+
+        timeline.forEach((prayer, index) => {
+          upcomingList.push(prayer);
+
+          let isActive = false;
+          if (!nextPrayerFound && prayer.dateObj > now) {
+            isActive = true; nextPrayerFound = true;
+          }
+
+          const iconClass = prayer.type === 'day' ? 'icon-day' : 'icon-night';
+          const activeClass = isActive ? 'active' : '';
+          const delay = 0.5 + (index * 0.12);
+          const displayTime12h = convertTo12Hour(prayer.dateObj);
+
+          let badgeHTML = '';
+          if (prayer.badge) { badgeHTML = `<span class="event-badge ${prayer.badge}">${prayer.badgeText}</span>`; }
+
+          // Unified Grid Layout Creation
+          prayerList.innerHTML += `
+            <div class="prayer-item ${activeClass}" data-name="${prayer.name}" style="animation: swingDown 0.8s var(--spring-elastic) ${delay}s both;">
+              <div class="prayer-top-row">
+                <div class="name-group">
+                  <div class="icon-base ${iconClass}"></div>
+                  <span class="prayer-name">${prayer.name}</span>
+                </div>
+                ${badgeHTML}
+              </div>
+              <span class="prayer-time">${displayTime12h}</span>
+            </div>`;
+        });
+      }
+
+      const defaultLat = 28.6139; 
+      const defaultLng = 77.2090;
+      
+      if ('geolocation' in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          pos => initializeData(pos.coords.latitude, pos.coords.longitude),
+          err => initializeData(defaultLat, defaultLng),
+          { timeout: 5000 }
+        );
+      } else {
+        initializeData(defaultLat, defaultLng);
+      }
+    });
+  </script>
+</body>
+</html>
