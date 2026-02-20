@@ -1,11 +1,17 @@
+const CACHE_NAME = 'war-sakeeb-vFINAL-GOATED'; // Changing this forces an update
+
 self.addEventListener('install', (e) => {
-  self.skipWaiting();
+    self.skipWaiting(); // Forces the new UI to take over immediately
 });
 
 self.addEventListener('activate', (e) => {
-  e.waitUntil(clients.claim());
+    e.waitUntil(
+        caches.keys().then((keys) => {
+            return Promise.all(keys.map((key) => caches.delete(key))); // Deletes the old UI memory
+        })
+    );
 });
 
 self.addEventListener('fetch', (e) => {
-  // Purely a pass-through to satisfy Chrome's PWA requirement
+    e.respondWith(fetch(e.request)); // Ensures it always looks for fresh files
 });
